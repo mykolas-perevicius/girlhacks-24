@@ -127,7 +127,7 @@ window.onload = function() {
 
         // Calculate tile size based on canvas dimensions and margins
         const tileWidth = (viewWidth - (columns + 1) * tileMargin) / columns;
-        const tileHeight = (viewHeight * 0.7 - (rows + 1) * tileMargin) / rows; // 70% of view height for grid
+        const tileHeight = (viewHeight * 0.6 - (rows + 1) * tileMargin) / rows; // 60% of view height for grid
 
         // Function to generate a random vibrant pastel color
         function getRandomRestingColor() {
@@ -279,7 +279,7 @@ window.onload = function() {
         function createButtons() {
             const buttonWidth = 120;
             const buttonHeight = 70;
-            const buttonY = viewHeight * 0.15; // Position the buttons at 15% of the view height
+            const buttonY = viewHeight * 0.22; // Position the buttons lower to make room for instructions
 
             // Calculate total width for five buttons including margins
             const totalButtonsWidth = buttonWidth * 5 + 80; // 20px margin between buttons
@@ -455,19 +455,39 @@ window.onload = function() {
 
         // Function to add a prompt and attempts indicator above the buttons
         function createPrompt() {
+            // Main instruction
             const promptText = new paper.PointText({
-                point: [viewWidth / 2, viewHeight * 0.08],
+                point: [viewWidth / 2, viewHeight * 0.06],
                 justification: 'center',
-                fontSize: 28,
+                fontSize: 24,
                 fillColor: 'black',
-                content: 'Group the right song!'
+                content: 'Find all the tiles that play:'
+            });
+
+            // Song name - make it BIG and obvious
+            const songNameText = new paper.PointText({
+                point: [viewWidth / 2, viewHeight * 0.11],
+                justification: 'center',
+                fontSize: 36,
+                fillColor: new paper.Color(0.2, 0.4, 0.8),
+                fontWeight: 'bold',
+                content: `"${targetSong.displayName || targetSong.name}"`
+            });
+
+            // Count helper
+            const countText = new paper.PointText({
+                point: [viewWidth / 2, viewHeight * 0.15],
+                justification: 'center',
+                fontSize: 18,
+                fillColor: new paper.Color(0.3, 0.3, 0.3),
+                content: `(${targetSongSounds.length} tiles total)`
             });
 
             // Attempts indicator
             const attemptsText = new paper.PointText({
-                point: [viewWidth / 2, viewHeight * 0.13],
+                point: [viewWidth / 2, viewHeight * 0.19],
                 justification: 'center',
-                fontSize: 20,
+                fontSize: 18,
                 fillColor: 'black',
                 content: `Attempts: ${attempts} / ${maxAttempts}`
             });
@@ -776,7 +796,7 @@ window.onload = function() {
             for (let row = 0; row < rows; row++) {
                 for (let col = 0; col < columns; col++) {
                     const x = tileMargin + col * (tileWidth + tileMargin);
-                    const y = viewHeight * 0.3 + tileMargin + row * (tileHeight + tileMargin); // Start at 30% of view height
+                    const y = viewHeight * 0.38 + tileMargin + row * (tileHeight + tileMargin); // Start at 38% to make room for instructions
                     createTile(x, y, tileIndex);
                     tileIndex++;
                 }
