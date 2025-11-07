@@ -20,25 +20,25 @@ window.onload = function() {
         // Clear the project to remove previous elements
         paper.project.clear();
 
-        // Define variables with vibrant, fun colors
-        const originalColor = new paper.Color(0.95, 0.95, 1, 1); // Very light blue-white for tiles
-        const clickAnimationColor = new paper.Color(0.4, 0.7, 1, 1); // Bright blue for selection
-        const playButtonColor = new paper.Color(0.2, 0.8, 0.4, 1); // Vibrant green
-        const playButtonBorderColor = new paper.Color(0.15, 0.65, 0.3, 1); // Darker green
-        const stopButtonColor = new paper.Color(1, 0.3, 0.3, 1); // Bright red
-        const submitButtonColor = new paper.Color(0.3, 0.5, 1, 1); // Bright blue
-        const stopButtonBorderColor = new paper.Color(0.8, 0.2, 0.2, 1); // Darker red
-        const submitButtonBorderColor = new paper.Color(0.2, 0.4, 0.85, 1); // Darker blue
-        const groupButtonColor =  new paper.Color(1, 0.7, 0.2, 1); // Bright orange
-        const groupButtonBorderColor = new paper.Color(0.9, 0.6, 0.1, 1); // Darker orange
-        const refreshButtonColor = new paper.Color(0.7, 0.3, 1, 1); // Bright purple
-        const refreshButtonBorderColor = new paper.Color(0.6, 0.2, 0.9, 1); // Darker purple
-        const successColor = new paper.Color(0.2, 0.95, 0.4, 1); // Bright neon green for winning
-        const revealColor = new paper.Color(0.3, 0.85, 0.5, 1); // Vibrant green for reveal
-        const correctTileHighlightColor = new paper.Color(0.7, 1, 0.8, 1); // Light mint green for correct tiles
+        // Dark mode colors
+        const originalColor = new paper.Color(0.15, 0.15, 0.2, 1); // Dark tile background
+        const clickAnimationColor = new paper.Color(0.4, 0.5, 0.9, 1); // Bright blue for selection
+        const playButtonColor = new paper.Color(0.2, 0.7, 0.4, 1); // Green
+        const playButtonBorderColor = new paper.Color(0.15, 0.55, 0.3, 1); // Darker green
+        const stopButtonColor = new paper.Color(0.85, 0.25, 0.25, 1); // Red
+        const submitButtonColor = new paper.Color(0.3, 0.5, 0.9, 1); // Blue
+        const stopButtonBorderColor = new paper.Color(0.65, 0.15, 0.15, 1); // Darker red
+        const submitButtonBorderColor = new paper.Color(0.2, 0.35, 0.75, 1); // Darker blue
+        const groupButtonColor =  new paper.Color(0.95, 0.6, 0.2, 1); // Orange
+        const groupButtonBorderColor = new paper.Color(0.75, 0.45, 0.1, 1); // Darker orange
+        const refreshButtonColor = new paper.Color(0.65, 0.3, 0.9, 1); // Purple
+        const refreshButtonBorderColor = new paper.Color(0.5, 0.2, 0.75, 1); // Darker purple
+        const successColor = new paper.Color(0.2, 0.9, 0.4, 1); // Bright green for winning
+        const revealColor = new paper.Color(0.3, 0.8, 0.5, 1); // Green for reveal
+        const correctTileHighlightColor = new paper.Color(0.3, 0.7, 0.4, 1); // Light green for correct tiles
         const rows = 3;
         const columns = 6;
-        const tileMargin = 10; // Margin between tiles
+        const tileMargin = 16; // More spacing between tiles
         const fadeDuration = 5; // Duration to fade to resting color in seconds
         let gameWon = false; // Flag to prevent interactions after winning
         let attempts = 0; // Number of attempts made by the user
@@ -460,7 +460,7 @@ window.onload = function() {
                 point: [viewWidth / 2, viewHeight * 0.06],
                 justification: 'center',
                 fontSize: 24,
-                fillColor: 'black',
+                fillColor: new paper.Color(0.9, 0.9, 0.95),
                 content: 'Find all the tiles that play:'
             });
 
@@ -469,7 +469,7 @@ window.onload = function() {
                 point: [viewWidth / 2, viewHeight * 0.11],
                 justification: 'center',
                 fontSize: 36,
-                fillColor: new paper.Color(0.2, 0.4, 0.8),
+                fillColor: new paper.Color(0.5, 0.7, 1),
                 fontWeight: 'bold',
                 content: `"${targetSong.displayName || targetSong.name}"`
             });
@@ -479,7 +479,7 @@ window.onload = function() {
                 point: [viewWidth / 2, viewHeight * 0.15],
                 justification: 'center',
                 fontSize: 18,
-                fillColor: new paper.Color(0.3, 0.3, 0.3),
+                fillColor: new paper.Color(0.7, 0.7, 0.8),
                 content: `(${targetSongSounds.length} tiles total)`
             });
 
@@ -488,7 +488,7 @@ window.onload = function() {
                 point: [viewWidth / 2, viewHeight * 0.19],
                 justification: 'center',
                 fontSize: 18,
-                fillColor: 'black',
+                fillColor: new paper.Color(0.9, 0.9, 0.95),
                 content: `Attempts: ${attempts} / ${maxAttempts}`
             });
 
@@ -803,7 +803,7 @@ window.onload = function() {
             }
         }
 
-        // Create a fun gradient background
+        // Create dark mode background
         function createBackground() {
             const background = new paper.Path.Rectangle({
                 point: [0, 0],
@@ -811,9 +811,9 @@ window.onload = function() {
                 fillColor: {
                     gradient: {
                         stops: [
-                            [new paper.Color(0.95, 0.93, 1), 0],      // Light purple-white
-                            [new paper.Color(0.93, 0.95, 1), 0.5],   // Light blue-white
-                            [new paper.Color(0.95, 0.95, 0.98), 1]   // Very light blue
+                            [new paper.Color(0.08, 0.08, 0.12), 0],      // Dark blue-gray
+                            [new paper.Color(0.05, 0.05, 0.1), 0.5],    // Darker
+                            [new paper.Color(0.03, 0.03, 0.08), 1]      // Very dark
                         ]
                     },
                     origin: [0, 0],
