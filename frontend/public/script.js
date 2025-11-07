@@ -185,14 +185,23 @@ window.onload = function() {
             // On hover, play the sound and add visual feedback
             tile.onMouseEnter = function() {
                 if (!gameWon) {
-                    // Add scale animation - reset to 1 first to prevent compounding
-                    tile.scaling = [1, 1];
-                    tile.tween({
-                        'scaling': [1.05, 1.05]
-                    }, {
-                        duration: 100,
-                        easing: 'easeOutQuad'
-                    });
+                    console.log('Mouse enter - scaling before:', tile.scaling);
+
+                    // Cancel any existing tweens to prevent compounding
+                    if (tile.scaleTween) {
+                        tile.scaleTween.stop();
+                    }
+
+                    // Reset to base scale first
+                    tile.scaling = new paper.Point(1, 1);
+
+                    // Add scale animation
+                    tile.scaleTween = tile.tween(
+                        { scaling: new paper.Point(1.05, 1.05) },
+                        { duration: 100, easing: 'easeOutQuad' }
+                    );
+
+                    console.log('Mouse enter - scaling after:', tile.scaling);
 
                     // Add glow effect by increasing brightness
                     if (!tile.isSelected && !tile.group) {
@@ -214,13 +223,20 @@ window.onload = function() {
 
             tile.onMouseLeave = function() {
                 if (!gameWon) {
+                    console.log('Mouse leave - scaling before:', tile.scaling);
+
+                    // Cancel any existing tweens
+                    if (tile.scaleTween) {
+                        tile.scaleTween.stop();
+                    }
+
                     // Return to normal scale
-                    tile.tween({
-                        'scaling': [1.0, 1.0]
-                    }, {
-                        duration: 100,
-                        easing: 'easeOutQuad'
-                    });
+                    tile.scaleTween = tile.tween(
+                        { scaling: new paper.Point(1.0, 1.0) },
+                        { duration: 100, easing: 'easeOutQuad' }
+                    );
+
+                    console.log('Mouse leave - scaling after:', tile.scaling);
 
                     // Restore original brightness
                     if (tile.savedColor && !tile.isSelected && !tile.group) {
