@@ -185,9 +185,10 @@ window.onload = function() {
             // On hover, play the sound and add visual feedback
             tile.onMouseEnter = function() {
                 if (!gameWon) {
-                    // Add scale animation
+                    // Add scale animation - reset to 1 first to prevent compounding
+                    tile.scaling = [1, 1];
                     tile.tween({
-                        'scaling': 1.05
+                        'scaling': [1.05, 1.05]
                     }, {
                         duration: 100,
                         easing: 'easeOutQuad'
@@ -215,7 +216,7 @@ window.onload = function() {
                 if (!gameWon) {
                     // Return to normal scale
                     tile.tween({
-                        'scaling': 1.0
+                        'scaling': [1.0, 1.0]
                     }, {
                         duration: 100,
                         easing: 'easeOutQuad'
