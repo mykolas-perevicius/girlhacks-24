@@ -1,28 +1,41 @@
 window.onload = function() {
+    // Check if Paper.js is loaded
+    if (typeof paper === 'undefined') {
+        console.error('Paper.js library not loaded');
+        alert('Error: Graphics library failed to load. Please refresh the page.');
+        return;
+    }
+
     // Setup Paper.js
-    paper.setup('myCanvas');
+    try {
+        paper.setup('myCanvas');
+    } catch (error) {
+        console.error('Error setting up Paper.js:', error);
+        alert('Error initializing graphics. Please refresh the page.');
+        return;
+    }
 
     // Function to initialize the game
     function initializeGame() {
         // Clear the project to remove previous elements
         paper.project.clear();
 
-        // Define variables
-        const originalColor = new paper.Color(0.8, 0.8, 0.8, 1); // Light grey
-        const clickAnimationColor = new paper.Color(0.5, 0.5, 0.5, 1); // Darker grey for selection
-        const playButtonColor = new paper.Color(0.2, 0.7, 0.5, 1); // Green
-        const playButtonBorderColor = new paper.Color(0.1, 0.6, 0.4, 1); // Darker green
-        const stopButtonColor = new paper.Color(0.8, 0.2, 0.2, 1); // Red
-        const submitButtonColor = new paper.Color(0.2, 0.4, 0.8, 1); // Blue
-        const stopButtonBorderColor = new paper.Color(0.7, 0.1, 0.1, 1); // Darker red
-        const submitButtonBorderColor = new paper.Color(0.1, 0.3, 0.7, 1); // Darker blue
-        const groupButtonColor =  new paper.Color(1, 0.65, 0, 1); // Orange
-        const groupButtonBorderColor = new paper.Color(0.85, 0.55, 0, 1); // Darker orange
-        const refreshButtonColor = new paper.Color(0.56, 0, 1, 1); // Purple
-        const refreshButtonBorderColor = new paper.Color(0.4, 0, 0.8, 1); // Darker purple
-        const successColor = new paper.Color(0.2, 0.8, 0.2, 1); // Bright green for winning
-        const revealColor = new paper.Color(0.4, 0.9, 0.4, 1); // Slightly darker green for reveal
-        const correctTileHighlightColor = new paper.Color(0.8, 1, 0.8, 1); // Super light green for correct tiles on each attempt
+        // Define variables with vibrant, fun colors
+        const originalColor = new paper.Color(0.95, 0.95, 1, 1); // Very light blue-white for tiles
+        const clickAnimationColor = new paper.Color(0.4, 0.7, 1, 1); // Bright blue for selection
+        const playButtonColor = new paper.Color(0.2, 0.8, 0.4, 1); // Vibrant green
+        const playButtonBorderColor = new paper.Color(0.15, 0.65, 0.3, 1); // Darker green
+        const stopButtonColor = new paper.Color(1, 0.3, 0.3, 1); // Bright red
+        const submitButtonColor = new paper.Color(0.3, 0.5, 1, 1); // Bright blue
+        const stopButtonBorderColor = new paper.Color(0.8, 0.2, 0.2, 1); // Darker red
+        const submitButtonBorderColor = new paper.Color(0.2, 0.4, 0.85, 1); // Darker blue
+        const groupButtonColor =  new paper.Color(1, 0.7, 0.2, 1); // Bright orange
+        const groupButtonBorderColor = new paper.Color(0.9, 0.6, 0.1, 1); // Darker orange
+        const refreshButtonColor = new paper.Color(0.7, 0.3, 1, 1); // Bright purple
+        const refreshButtonBorderColor = new paper.Color(0.6, 0.2, 0.9, 1); // Darker purple
+        const successColor = new paper.Color(0.2, 0.95, 0.4, 1); // Bright neon green for winning
+        const revealColor = new paper.Color(0.3, 0.85, 0.5, 1); // Vibrant green for reveal
+        const correctTileHighlightColor = new paper.Color(0.7, 1, 0.8, 1); // Light mint green for correct tiles
         const rows = 3;
         const columns = 6;
         const tileMargin = 10; // Margin between tiles
@@ -35,8 +48,16 @@ window.onload = function() {
         let selectedTiles = []; // Tiles currently selected (not yet grouped)
 
         // Ensure that the 'songs' array is available (included via songs.js)
-        if (typeof songs === 'undefined') {
-            alert('Songs data not found. Please include songs.js before this script.');
+        if (typeof songs === 'undefined' || !Array.isArray(songs) || songs.length === 0) {
+            console.error('Songs data not loaded or invalid');
+            alert('Error: Song data failed to load. Please refresh the page.');
+            return;
+        }
+
+        // Ensure Howler.js is loaded
+        if (typeof Howl === 'undefined') {
+            console.error('Howler.js library not loaded');
+            alert('Error: Audio library failed to load. Please refresh the page.');
             return;
         }
 
@@ -51,8 +72,13 @@ window.onload = function() {
         const targetSongIndex = Math.floor(Math.random() * songs.length);
         const targetSong = songs[targetSongIndex];
 
-        // Load sounds for the target song
-        const targetSongSounds = targetSong.parts.map(file => new Howl({ src: ['sounds/' + file] }));
+        // Load sounds for the target song with error handling
+        const targetSongSounds = targetSong.parts.map(file => new Howl({
+            src: ['sounds/' + file],
+            onloaderror: function(id, error) {
+                console.error('Error loading target song snippet:', file, error);
+            }
+        }));
 
         // Load the full song (with error handling if it doesn't exist)
         const fullSong = new Howl({
@@ -69,8 +95,13 @@ window.onload = function() {
         // Flatten the parts of other songs into one array
         let otherSongParts = otherSongs.flatMap(song => song.parts);
 
-        // Load sounds for other song parts
-        const otherSongSounds = otherSongParts.map(file => new Howl({ src: ['sounds/' + file] }));
+        // Load sounds for other song parts with error handling
+        const otherSongSounds = otherSongParts.map(file => new Howl({
+            src: ['sounds/' + file],
+            onloaderror: function(id, error) {
+                console.error('Error loading other song snippet:', file, error);
+            }
+        }));
 
         // Shuffle the tiles
         let tileIndices = [...Array(totalTiles).keys()]; // Create an array [0, 1, ..., totalTiles - 1]
@@ -98,12 +129,17 @@ window.onload = function() {
         const tileWidth = (viewWidth - (columns + 1) * tileMargin) / columns;
         const tileHeight = (viewHeight * 0.7 - (rows + 1) * tileMargin) / rows; // 70% of view height for grid
 
-        // Function to generate a random light color
+        // Function to generate a random vibrant pastel color
         function getRandomRestingColor() {
-            const r = Math.random() * 0.4 + 0.6; // Random value between 0.6 and 1
-            const g = Math.random() * 0.4 + 0.6;
-            const b = Math.random() * 0.4 + 0.6;
-            return new paper.Color(r, g, b, 1);
+            // Generate vibrant pastel colors with more saturation
+            const hue = Math.random(); // Random hue (0-1)
+            const saturation = Math.random() * 0.4 + 0.5; // 0.5-0.9 for vibrant colors
+            const brightness = Math.random() * 0.15 + 0.85; // 0.85-1 for light/pastel
+            return new paper.Color({
+                hue: hue * 360,
+                saturation: saturation,
+                brightness: brightness
+            });
         }
 
         // Function to shuffle an array in place (Fisher-Yates algorithm)
@@ -146,8 +182,26 @@ window.onload = function() {
                 tile.isTarget = false;
             }
 
-            // On hover, play the sound
+            // On hover, play the sound and add visual feedback
             tile.onMouseEnter = function() {
+                if (!gameWon) {
+                    // Add scale animation
+                    tile.tween({
+                        'scaling': 1.05
+                    }, {
+                        duration: 100,
+                        easing: 'easeOutQuad'
+                    });
+
+                    // Add glow effect by increasing brightness
+                    if (!tile.isSelected && !tile.group) {
+                        const currentColor = tile.fillColor;
+                        tile.savedColor = currentColor.clone();
+                        tile.fillColor = currentColor.clone();
+                        tile.fillColor.brightness = Math.min(currentColor.brightness + 0.1, 1);
+                    }
+                }
+
                 if (tile.sound) {
                     // Stop all preview sounds before playing a new one
                     stopAllPreviewSounds();
@@ -158,6 +212,21 @@ window.onload = function() {
             };
 
             tile.onMouseLeave = function() {
+                if (!gameWon) {
+                    // Return to normal scale
+                    tile.tween({
+                        'scaling': 1.0
+                    }, {
+                        duration: 100,
+                        easing: 'easeOutQuad'
+                    });
+
+                    // Restore original brightness
+                    if (tile.savedColor && !tile.isSelected && !tile.group) {
+                        tile.fillColor = tile.savedColor;
+                    }
+                }
+
                 // Stop preview sounds when mouse leaves
                 stopAllPreviewSounds();
             };
@@ -713,6 +782,29 @@ window.onload = function() {
                 }
             }
         }
+
+        // Create a fun gradient background
+        function createBackground() {
+            const background = new paper.Path.Rectangle({
+                point: [0, 0],
+                size: [viewWidth, viewHeight],
+                fillColor: {
+                    gradient: {
+                        stops: [
+                            [new paper.Color(0.95, 0.93, 1), 0],      // Light purple-white
+                            [new paper.Color(0.93, 0.95, 1), 0.5],   // Light blue-white
+                            [new paper.Color(0.95, 0.95, 0.98), 1]   // Very light blue
+                        ]
+                    },
+                    origin: [0, 0],
+                    destination: [viewWidth, viewHeight]
+                }
+            });
+            background.sendToBack();
+        }
+
+        // Create the background first
+        createBackground();
 
         // Create the prompt and attempts indicator
         createPrompt();

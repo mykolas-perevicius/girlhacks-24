@@ -4,13 +4,16 @@ import App from './App.jsx'
 import { ChakraProvider } from '@chakra-ui/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <ChakraProvider>
-        <App />
-      </ChakraProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <ChakraProvider>
+          <App />
+        </ChakraProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </StrictMode>,
 )
