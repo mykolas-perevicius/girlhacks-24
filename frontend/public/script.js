@@ -54,8 +54,13 @@ window.onload = function() {
         // Load sounds for the target song
         const targetSongSounds = targetSong.parts.map(file => new Howl({ src: ['sounds/' + file] }));
 
-        // Load the full song
-        const fullSong = new Howl({ src: ['sounds/' + targetSong.name + '/full.mp3'] });
+        // Load the full song (with error handling if it doesn't exist)
+        const fullSong = new Howl({
+            src: ['sounds/' + targetSong.name + '/full.mp3'],
+            onloaderror: function() {
+                console.log('Full song not available for ' + targetSong.name);
+            }
+        });
 
         // Collect snippets from other songs
         let otherSongs = songs.slice();
