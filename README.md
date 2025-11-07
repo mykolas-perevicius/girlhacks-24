@@ -4,7 +4,7 @@ A fun and interactive music puzzle game where you listen to song snippets and gr
 
 ## 🎮 Play Now
 
-**[Play Melody Matcher Live!](#)** _(Link will be updated after deployment)_
+**[Play Melody Matcher Live!](https://delicate-torte-2cafb0.netlify.app)**
 
 ## 🎯 How to Play
 

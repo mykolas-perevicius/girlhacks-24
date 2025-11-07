@@ -14,12 +14,12 @@ const Home = () => {
     document.head.appendChild(howlerScript);
 
     const songsScript = document.createElement('script');
-    songsScript.src = 'songs.js';
+    songsScript.src = '/songs.js';
     songsScript.type = 'text/javascript';
     document.head.appendChild(songsScript);
 
     const customScript = document.createElement('script');
-    customScript.src = 'script.js';
+    customScript.src = '/script.js';
     customScript.type = 'text/javascript';
     document.head.appendChild(customScript);
 
