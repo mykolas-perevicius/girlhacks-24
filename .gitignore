@@ -33,3 +33,6 @@ Thumbs.db
 frontend/.cache/
 .vite/
 frontend/.vite/
+
+# Local Netlify folder
+.netlify
